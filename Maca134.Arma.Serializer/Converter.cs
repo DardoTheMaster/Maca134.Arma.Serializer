@@ -25,12 +25,13 @@ namespace Maca134.Arma.Serializer
         /// <typeparam name="T">The type of the object to deserialize to</typeparam>
         /// <param name="value">The ARMA array to deserialize</param>
         /// <returns>The deserialized object from the ARMA array.</returns>
-        public static T DeserializeObject<T>(string value)
+        public static dynamic DeserializeObject(string value,Type type)
         {
             value = value.Replace(@"""""", @"\""");
             var replaceNullPattern = new Regex("([\x5b,]?)nil([\x5d,]+)");
+            Console.WriteLine(type);
             value = replaceNullPattern.Replace(value, "$1null$2");
-            return JsonConvert.DeserializeObject<T>(value, new ArmaJsonConverter());
+            return Convert.ChangeType(JsonConvert.DeserializeObject(value,type, new ArmaJsonConverter()),type);
         }
     }
 }
